@@ -9,6 +9,7 @@ var afficheText = const Text(
     color: Colors.blue,
     fontWeight: FontWeight.bold,
     decoration: TextDecoration.none,
+    
   ),
 );
 
