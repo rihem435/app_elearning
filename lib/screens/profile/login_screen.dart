@@ -1,4 +1,7 @@
+import 'package:app/core/widgets/custom_title.dart';
+import 'package:app/screens/profile/sing_up_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,16 +12,16 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Log In',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+            const SizedBox(
+              height: 30,
+            ),
+            const CustomTitle(
+              title: 'Log In',
             ),
             const SizedBox(
               height: 20,
@@ -91,15 +94,15 @@ class LoginScreen extends StatelessWidget {
               height: 20,
             ),
             TextFormField(
-              decoration: const InputDecoration(
-                label: Text(
+              decoration: InputDecoration(
+                label: const Text(
                   'Password',
                   style: TextStyle(
                     color: Colors.black,
                   ),
                 ),
                 hintText: "Enter your password",
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       15,
@@ -110,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       15,
@@ -121,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                errorBorder: OutlineInputBorder(
+                errorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       15,
@@ -132,7 +135,7 @@ class LoginScreen extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                focusedErrorBorder: OutlineInputBorder(
+                focusedErrorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       15,
@@ -143,12 +146,60 @@ class LoginScreen extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.lock,
                   color: Colors.blue,
                 ),
+                suffixIcon: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.visibility,
+                  ),
+                ),
               ),
+              obscureText: true,
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                minimumSize: WidgetStateProperty.all(const Size(130, 40)),
+                elevation: WidgetStateProperty.all(0),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              child: const Text("Login"),
+            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: "Don't have an account? "),
+                  TextSpan(
+                    text: "SignUp",
+                    style: const TextStyle(
+                      fontFamily: 'Jua',
+                      color: Colors.blue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SingUpScreen(),
+                          ),
+                        );
+                      },
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
