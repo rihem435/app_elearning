@@ -5,16 +5,26 @@ class CustomInputText extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
   final bool? obscureText;
-  const CustomInputText(
-      {super.key,
-      required this.label,
-      required this.hintText,
-      required this.prefixIcon,
-      this.obscureText});
+
+  final Widget? suffixIcon;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  const CustomInputText({
+    super.key,
+    required this.label,
+    required this.hintText,
+    required this.prefixIcon,
+    this.obscureText,
+    this.suffixIcon,
+    this.controller,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      validator: validator,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
         label: Text(
@@ -72,6 +82,7 @@ class CustomInputText extends StatelessWidget {
           prefixIcon,
           color: Colors.blue,
         ),
+        suffixIcon: suffixIcon,
       ),
     );
   }
