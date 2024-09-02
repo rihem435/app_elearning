@@ -1,51 +1,16 @@
+import 'package:app/controllers/profile_controller.dart';
 import 'package:app/core/networking/app_api.dart';
 import 'package:app/core/widgets/custom_input_text.dart';
 import 'package:app/core/widgets/custom_title.dart';
+import 'package:app/models/user/user_login_model.dart';
+import 'package:app/screens/home/home_screen.dart';
 import 'package:app/screens/profile/sing_up_screen.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends GetView<ProfileController> {
   const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _obscureText = true;
-  TextEditingController? emailController;
-  TextEditingController? passwordController;
-  Dio? dio;
-  login() async {
-    try {
-      Map<String, String> data = {
-        "email": emailController!.text,
-        "password": passwordController!.text,
-      };
-      Response response = await dio!.post(
-        AppApi.loginUrl,
-        data: data,
-      );
-      if (response.statusCode == 200) {
-        print('Login success');
-      }
-    } catch (e) {
-      print("error=====>$e");
-    }
-  }
-
-  final keyForm = GlobalKey<FormState>();
-  @override
-  void initState() {
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    dio = Dio();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Form(
-          key: keyForm,
+          key: controller.keyForm,
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 200,
               ),
               CustomInputText(
-                controller: emailController,
+                controller: controller.emailController,
                 label: 'Email',
                 hintText: "Enter your email",
                 prefixIcon: Icons.email,
@@ -81,7 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter email';
                   }
-                  if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  if (!RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                       .hasMatch(value)) {
                     return 'Please enter valid email';
                   }
@@ -91,30 +57,29 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 20,
               ),
-              CustomInputText(
-                controller: passwordController,
-                label: 'Password',
-                hintText: "Enter your password",
-                prefixIcon: Icons.lock,
-                obscureText: _obscureText,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                      print('obscure text $_obscureText');
-                    });
-                  },
-                  // condition ? contenuCasTrue : contenuCasFalse
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
+              GetBuilder<ProfileController>(
+                builder: (controller) => CustomInputText(
+                  controller: controller.passwordController,
+                  label: 'Password',
+                  hintText: "Enter your password",
+                  prefixIcon: Icons.lock,
+                  obscureText: controller.obscureText,
+                  suffixIcon: IconButton(
+                    onPressed: () => controller.showPassword(),
+                    // condition ? contenuCasTrue : contenuCasFalse
+                    icon: Icon(
+                      controller.obscureText
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some password';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some password';
-                  }
-                  return null;
-                },
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -142,10 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (keyForm.currentState!.validate()) {
-                    print('email $emailController');
-                    print('email ${emailController!.text}');
-                    login();
+                  Get.to(const HomeScreen());
+                  if (controller.keyForm.currentState!.validate()) {
+                    controller.login();
                   }
                 },
                 style: ButtonStyle(

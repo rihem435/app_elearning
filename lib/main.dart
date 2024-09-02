@@ -1,6 +1,8 @@
 // widget
+import 'package:app/core/bindings/bindings.dart';
 import 'package:app/screens/profile/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 var afficheText = const Text(
   "Hello World",
@@ -26,9 +28,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return GetMaterialApp(
+      initialBinding: AllBindings(),
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }
