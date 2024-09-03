@@ -1,8 +1,7 @@
-import 'package:app/core/storage/app_storage.dart';
+import 'package:app/controllers/home_controller.dart';
 import 'package:app/core/widgets/custom_drawer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,81 +14,69 @@ class HomeScreen extends StatelessWidget {
           'Home Screen',
         ),
         centerTitle: true,
-        //leading: const Icon(Icons.home),
       ),
       drawer: const CustomDrawer(),
       body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Liste of ',
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * .2,
-            width: double.infinity,
-            child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 15,
-                itemBuilder: (BuildContext context, int index) => Card(
-                      child: SizedBox(
-                        width: MediaQuery.sizeOf(context).width * .8,
-                        height: MediaQuery.sizeOf(context).height * .1,
-                        child: const Center(
-                          child: ListTile(
-                            leading: Icon(Icons.child_care),
-                            title: Text('title Name'),
-                            subtitle: Text.rich(
-                                TextSpan(text: "description", children: [
-                              TextSpan(
-                                text: "duree",
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              )
-                            ])),
-                            trailing: Text("Formateur"),
+          const Text('List of'),
+          const SizedBox(height: 20),
+          Expanded(
+            child: GetBuilder<HomeController>(
+              builder: (controller) => FutureBuilder(
+                future: controller.getFormations(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text(
+                      snapshot.error.toString(),
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data!.formations!.isEmpty) {
+                      return const Text('No data');
+                    } else if (snapshot.data!.formations!.isNotEmpty) {
+                      return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.75,
                           ),
-                        ),
-                      ),
-                    )),
+                          itemCount: snapshot.data!.formations!.length,
+                          itemBuilder: (context, index) => Center(
+                                child: ListTile(
+                                  leading: const Icon(Icons.child_care),
+                                  title: Text(
+                                      'Title: ${snapshot.data!.formations![index].nameF} '),
+                                  subtitle: Text.rich(TextSpan(
+                                    text:
+                                        "Description : ${snapshot.data!.formations![index].descriptionF}",
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "\nDuree:${snapshot.data!.formations![index].dureeF}",
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                                  trailing: const Text("Formateur "),
+                                ),
+                              ));
+                    }
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
           ),
-
-          // Expanded(
-          //   child: SizedBox(
-          //     height: 300,
-          //     width: double.infinity,
-          //     child: ListView.builder(
-          //       scrollDirection: Axis.horizontal,
-          //       itemCount: 5,
-          //       shrinkWrap: true,
-          //       physics: const ClampingScrollPhysics(),
-          //       itemBuilder: (context, index) {
-          //         return const Card(
-          //           child: ListTile(
-          //             leading: Icon(Icons.child_care),
-          //             title: Text('title Name'),
-          //             subtitle:
-          //                 Text.rich(TextSpan(text: "description", children: [
-          //               TextSpan(
-          //                 text: "duree",
-          //                 style: TextStyle(
-          //                   color: Colors.red,
-          //                 ),
-          //               )
-          //             ])),
-          //             trailing: Text("Formateur"),
-          //           ),
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

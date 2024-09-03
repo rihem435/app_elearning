@@ -2,6 +2,7 @@ import 'package:app/core/networking/app_api.dart';
 import 'package:app/core/storage/app_storage.dart';
 import 'package:app/models/user/user_login_model.dart';
 import 'package:app/screens/home/home_screen.dart';
+import 'package:app/screens/profile/login_screen.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,12 +38,26 @@ class ProfileController extends GetxController {
         AppStorage.saveName(userLoginModel!.user!.name!);
         AppStorage.saveEmail(userLoginModel!.user!.email!);
 
-        Get.to(HomeScreen());
-        
+        Get.to(const HomeScreen());
+
         print(userLoginModel!.user!.role);
       }
     } catch (e) {
       print("error=====>$e");
+    }
+  }
+
+  logout() async {
+    try {
+      dio.Response response = await _dio!.post(
+        AppApi.logOutURL,
+      );
+      if (response.statusCode == 200) {
+        Get.to(const LoginScreen());
+        print('logOut successfully');
+      }
+    } catch (e) {
+      print('error ======>$e ');
     }
   }
 
