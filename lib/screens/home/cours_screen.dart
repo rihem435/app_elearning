@@ -29,7 +29,7 @@ class CoursScreen extends StatelessWidget {
           description: "flutter et dart",
           duree: "1 mois",
           image: "login.png",
-          onTap: () => Get.to(const DetailsScreen()),
+          onTap: () => Get.to( DetailsScreen()),
         ),
       ),
     );

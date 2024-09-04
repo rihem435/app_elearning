@@ -1,5 +1,6 @@
 import 'package:app/controllers/home_controller.dart';
 import 'package:app/core/widgets/custom_drawer.dart';
+import 'package:app/screens/home/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -49,25 +50,40 @@ class HomeScreen extends StatelessWidget {
                             childAspectRatio: 0.75,
                           ),
                           itemCount: snapshot.data!.formations!.length,
-                          itemBuilder: (context, index) => Center(
-                                child: ListTile(
-                                  leading: const Icon(Icons.child_care),
-                                  title: Text(
-                                      'Title: ${snapshot.data!.formations![index].nameF} '),
-                                  subtitle: Text.rich(TextSpan(
-                                    text:
-                                        "Description : ${snapshot.data!.formations![index].descriptionF}",
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            "\nDuree:${snapshot.data!.formations![index].dureeF}",
-                                        style: const TextStyle(
-                                          color: Colors.red,
+                          itemBuilder: (context, index) => InkWell(
+                                onTap: () {
+                                  Get.to(
+                                    DetailsScreen(
+                                      title: "Formation",
+                                      name: snapshot
+                                          .data!.formations![index].nameF,
+                                      description: snapshot.data!
+                                          .formations![index].descriptionF,
+                                      duree: snapshot
+                                          .data!.formations![index].dureeF,
+                                    ),
+                                  );
+                                },
+                                child: Center(
+                                  child: ListTile(
+                                    leading: const Icon(Icons.child_care),
+                                    title: Text(
+                                        'Title: ${snapshot.data!.formations![index].nameF} '),
+                                    subtitle: Text.rich(TextSpan(
+                                      text:
+                                          "Description : ${snapshot.data!.formations![index].descriptionF}",
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              "\nDuree:${snapshot.data!.formations![index].dureeF}",
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
-                                  trailing: const Text("Formateur "),
+                                      ],
+                                    )),
+                                    trailing: const Text("Formateur "),
+                                  ),
                                 ),
                               ));
                     }

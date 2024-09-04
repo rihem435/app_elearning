@@ -1,5 +1,6 @@
 import 'package:app/controllers/profile_controller.dart';
 import 'package:app/screens/home/cours_screen.dart';
+import 'package:app/screens/profile/update_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,7 +45,8 @@ class CustomDrawer extends GetView<ProfileController> {
           ListTile(
             title: const Text('Profile'),
             onTap: () {
-              Navigator.pop(context);
+              controller.getUser();
+              Get.to(const UpdateScreen());
             },
             leading: const Icon(Icons.person),
           ),
